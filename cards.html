@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume — Alex Morgan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan: #00f5ff;
+      --magenta: #ff00c8;
+      --green: #00ff88;
+      --red: #ff6b6b;
+      --bg1: #0a0a1a;
+      --glass: rgba(255,255,255,0.07);
+      --glass-border: rgba(255,255,255,0.15);
+      --text: #f0f0ff;
+      --muted: rgba(255,255,255,0.55);
+      --font: 'Outfit', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg1);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATED BACKGROUND ── */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.22;
+      animation: float 14s ease-in-out infinite;
+    }
+    .orb1 { width: 520px; height: 520px; background: var(--cyan);    top: -180px; left: -180px; animation-delay: 0s; }
+    .orb2 { width: 420px; height: 420px; background: var(--magenta); bottom: -120px; right: -120px; animation-delay: -5s; }
+    .orb3 { width: 320px; height: 320px; background: #7000ff;        top: 45%; left: 48%; animation-delay: -9s; }
+    @keyframes float {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(28px,-28px) scale(1.06); }
+      66%      { transform: translate(-18px,22px) scale(0.96); }
+    }
+
+    /* ── WRAPPER ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    /* ── CARD BASE ── */
+    .glass-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 18px;
+      padding: 36px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .glass-card.show { opacity: 1; transform: translateY(0); }
+
+    /* ── HEADER CARD ── */
+    .header-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 700; color: #0a0a1a;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 28px rgba(0,245,255,0.35);
+      flex-shrink: 0;
+    }
+
+    .h-name {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.35rem;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .h-role {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+    }
+
+    .h-summary {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.72;
+      max-width: 510px;
+    }
+    .h-summary strong { color: var(--text); }
+
+    .contact-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    .pill {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50px;
+      padding: 0.32rem 0.85rem;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .pill:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,245,255,0.08); }
+
+    /* ── GRID BODY ── */
+    .grid-body {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .sec-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0,245,255,0.35), transparent);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.4rem; }
+
+    /* Skills */
+    .skill-item { margin-bottom: 0.95rem; }
+    .skill-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; margin-bottom: 0.35rem;
+    }
+    .skill-pct { font-family: var(--mono); font-size: 0.68rem; color: var(--cyan); }
+    .bar-track {
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px; overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      width: 0;
+      transition: width 1.5s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    /* Tags */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.06em;
+      padding: 0.28rem 0.6rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      color: var(--muted);
+      cursor: default;
+      transition: all 0.2s;
+    }
+    .tag:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,245,255,0.08); }
+
+    /* Languages */
+    .lang-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.84rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .lang-row:last-child { border-bottom: none; }
+    .lang-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      padding: 0.18rem 0.52rem;
+      border-radius: 50px;
+      border: 1px solid rgba(0,245,255,0.4);
+      color: var(--cyan);
+    }
+
+    /* ── MAIN ── */
+    .main-col { display: flex; flex-direction: column; gap: 1.4rem; }
+
+    /* Experience entries */
+    .entry {
+      padding: 1.3rem 1.4rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      margin-bottom: 0.8rem;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.25s, background 0.25s;
+    }
+    .entry.show { opacity: 1; transform: translateX(0); }
+    .entry:last-child { margin-bottom: 0; }
+    .entry:hover { border-color: rgba(0,245,255,0.3); background: rgba(0,245,255,0.04); }
+
+    .entry-top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 0.6rem; margin-bottom: 0.25rem; flex-wrap: wrap;
+    }
+    .entry-role { font-size: 1rem; font-weight: 600; }
+    .entry-date {
+      font-family: var(--mono);
+      font-size: 0.62rem; color: var(--cyan);
+      background: rgba(0,245,255,0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      border: 1px solid rgba(0,245,255,0.25);
+      white-space: nowrap;
+    }
+    .entry-co { font-size: 0.8rem; color: var(--magenta); margin-bottom: 0.75rem; font-weight: 500; }
+    .entry-list { list-style: none; font-size: 0.86rem; line-height: 1.75; color: var(--muted); }
+    .entry-list li { padding-left: 1.2em; position: relative; margin-bottom: 0.2rem; }
+    .entry-list li::before { content: '▹'; position: absolute; left: 0; color: var(--cyan); font-size: 0.75em; top: 0.15em; }
+
+    /* Education */
+    .edu-entry {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 1rem;
+      padding: 1.1rem 1.3rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      margin-bottom: 0.8rem;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .edu-entry.show { opacity: 1; transform: translateX(0); }
+    .edu-entry:last-child { margin-bottom: 0; }
+    .edu-degree { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .edu-school { font-size: 0.77rem; color: var(--muted); }
+    .edu-note { font-family: var(--mono); font-size: 0.61rem; color: var(--cyan); margin-top: 0.28rem; }
+    .edu-year { font-family: var(--mono); font-size: 0.7rem; color: var(--magenta); white-space: nowrap; margin-top: 0.15rem; }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      max-width: 1000px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
+    .footer-note { font-family: var(--mono); font-size: 0.62rem; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; }
+    .btn-print {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(45deg, var(--cyan), var(--magenta));
+      color: #0a0a1a;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 20px rgba(0,245,255,0.2);
+    }
+    .btn-print:hover { transform: scale(1.04); box-shadow: 0 0 32px rgba(0,245,255,0.45); }
+
+    /* ── PRINT ── */
+    @media print {
+      .bg-orbs, .btn-print { display: none; }
+      .glass-card, .entry, .edu-entry { opacity: 1 !important; transform: none !important; box-shadow: none; }
+      body { background: #0a0a1a !important; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .header-wrap { grid-template-columns: 1fr; }
+      .contact-pills { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+      .grid-body { grid-template-columns: 1fr; }
+    }
+
+
+    /* -------*/
+
+/* ⭐ SOFT HOVER MOMENT (ALL CARDS) */
+.glass-card {
+    position: relative;
+    transition: transform 0.55s ease, box-shadow 0.55s ease;
+}
+
+/* hover lift */
+.glass-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(0,245,255,0.15);
+}
+
+/* 🔵 BLUE BORDER GLOW ON HOVER */
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    transition: all 0.55s ease;
+    pointer-events: none;
+}
+
+/* show glow on hover */
+.glass-card:hover::before {
+    border-color: #00f5ff;
+    box-shadow: 0 0 18px rgba(0,245,255,0.35);
+}
+
+/*---ineer card ---*/
+
+/* ⭐ MAIN CARD HOVER */
+.glass-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.55s ease, box-shadow 0.55s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(90, 120, 255, 0.18);
+}
+
+/* 🔵 PURPLE-BLUE BORDER GLOW */
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    transition: all 0.55s ease;
+    pointer-events: none;
+}
+
+.glass-card:hover::before {
+    border-color: #6c63ff; /* purple-blue */
+    box-shadow: 0 0 18px rgba(108, 99, 255, 0.35);
+}
+
+/* ⭐ INNER ENTRY HOVER */
+.entry {
+    padding: 12px;
+    border-radius: 10px;
+    transition: 0.4s ease;
+}
+
+.entry:hover {
+    transform: translateY(-5px);
+    background: rgba(108, 99, 255, 0.08);
+    box-shadow: 0 8px 18px rgba(108, 99, 255, 0.15);
+}
+
+/*   ========= crd======*/
+
+/* .glass-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    transition: transform 0.55s ease, box-shadow 0.55s ease;
+}
+
+/* =========================
+   EXPERIENCE CARD (BLUE)
+========================= 
+.glass-card.experience:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(0, 140, 255, 0.2);
+}
+
+.glass-card.experience::before {
+    border-color: transparent;
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    transition: 0.5s ease;
+    pointer-events: none;
+}
+
+.glass-card.experience:hover::before {
+    border-color: #1e90ff;
+    box-shadow: 0 0 18px rgba(30,144,255,0.35);
+}
+
+/* =========================
+
+.glass-card.skills:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(155, 89, 182, 0.2);
+}
+
+.glass-card.skills:hover::before {
+    border-color: #9b59b6;
+    box-shadow: 0 0 18px rgba(155,89,182,0.35);
+}
+
+
+.glass-card.education:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(46, 204, 113, 0.2);
+}
+
+.glass-card.education:hover::before {
+    border-color: #2ecc71;
+    box-shadow: 0 0 18px rgba(46,204,113,0.35);
+}
+
+
+.entry {
+    padding: 12px;
+    border-radius: 10px;
+    transition: 0.4s ease;
+}
+
+.entry:hover {
+    transform: translateY(-5px);
+    background: rgba(155, 89, 182, 0.08);
+    box-shadow: 0 8px 18px rgba(155, 89, 182, 0.15);
+} */
+
+
+
+/* =========================
+   EDUCATION CARD BASE (NO CHANGE)
+========================= */
+.glass-card {
+  position: relative;
+}
+
+/* =========================
+   EDUCATION INNER ENTRY (MATCH YOUR HTML)
+========================= */
+.edu-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 14px;
+  margin-top: 12px;
+
+  border-radius: 12px;
+
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+/* =========================
+   HOVER EFFECT (EDUCATION ITEMS)
+========================= */
+.edu-entry:hover {
+  transform: translateY(-6px);
+  background: rgba(46, 204, 113, 0.08);
+  box-shadow: 0 10px 22px rgba(46, 204, 113, 0.18);
+  border-left: 3px solid #2ecc71;
+}
+
+/* =========================
+   TEXT STYLING
+========================= */
+.edu-degree {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.edu-school {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 2px;
+ color: #ff00c8;
+}
+
+
+.edu-schooll:hover {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.edu-schoole:hover {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.edu-schooll {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 2px;
+  color: khaki;
+}
+
+.edu-schoole {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 2px;
+  color: pink;
+}
+
+.edu-school:hover {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.edu-note {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
+/* =========================
+   YEAR STYLE
+========================= */
+.edu-year {
+  font-size: 13px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* =========================
+   YEAR HOVER EFFECT
+========================= */
+.edu-entry:hover .edu-year {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+/**=======================/
+
+
+/* =========================
+   HEADER CARD BASE (LIKE EDUCATION STYLE)
+========================= */
+.wrapper > .glass-card {
+  position: relative;
+  border-radius: 12px;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+/* =========================
+   HEADER HOVER (SAME STYLE AS edu-entry)
+========================= */
+.wrapper > .glass-card:hover {
+  transform: translateY(-6px);
+  background: rgba(46, 204, 113, 0.08);
+  box-shadow: 0 10px 22px rgba(46, 204, 113, 0.18);
+  border-left: 3px solid #2ecc71;
+}
+
+/* =========================
+   INNER HEADER CONTENT HOVER FEEL
+========================= */
+.wrapper > .glass-card:hover .h-name {
+  color: #2ecc71;
+}
+
+.wrapper > .glass-card:hover .avatar {
+  transform: scale(1.1);
+  background: #2ecc71;
+}
+
+/* =========================
+   PILLS (same soft hover like edu-note feel)
+========================= */
+.pill {
+  transition: 0.3s ease;
+}
+
+.pill:hover {
+  transform: translateY(-3px);
+  background: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- Animated background orbs -->
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="wrapper">
+
+  <!-- ── HEADER ── -->
+  <div class="glass-card" style="margin-bottom:1.5rem;">
+    <div class="header-wrap">
+      <div>
+        <div class="avatar">SJ</div>
+        <h1 class="h-name">Santosh jakune</h1>
+        <div class="h-role">Python Full Stack DEveloper  &amp; Manual testing & QA Automation</div>
+        <p class="h-summary">
+        <p>
+  Python Full Stack Developer & Software Tester with <strong>2+ years</strong> building scalable applications and ensuring quality through efficient testing.
+
+      
+        </p>
+
+      </div>
+      <div class="contact-pills">
+        <a class="pill" href="mailto:santoshjakune3740@email.com">✉ santoshajakune@email.com</a>
+        <a class="pill" href="7559198564">☎ +91 7559198564</a>
+        <a class="pill" href="https://www.linkedin.com/in/santosh-jakune-41a7953b4?utm_source=share_via&utm_content=profile&utm_medium=member_android">⌘ linkedin</a>
+        <span class="pill">📍Bengaluru </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BODY GRID ── -->
+  <div class="grid-body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="glass-card">
+        <div class="sec-label">Skills</div>
+        <div class="skill-item">
+          <div class="skill-row"><span>Python</span><span class="skill-pct">92%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>Php</span><span class="skill-pct">95%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="95"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>HTML / CSS / Java Script</span><span class="skill-pct">88%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>Quelity Ausoruns</span><span class="skill-pct">75%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="75"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>Manual Tsting</span><span class="skill-pct">90%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="68"></div></div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="sec-label">Tools</div>
+        <div class="tag-cloud">
+          <span class="tag">IDEL/VS Code</span><span class="tag">Notion</span>
+          <span class="tag">Subline TextEditor</span><span class="tag">Miro</span>
+          <span class="tag">VS code</span><span class="tag">Lottie</span>
+          <span class="tag">Playwright</span><span class="tag">Hotjar</span>
+          <span class="tag">Python Selenium /Chroom/FirFox</span><span class="tag">Linear</span>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="sec-label">Languages</div>
+        <div class="lang-row">English <span class="lang-badge">Fluent</span></div>
+        <div class="lang-row">Marathi <span class="lang-badge">Fluent</span></div>
+        <div class="lang-row">Hindi <span class="lang-badge">fluent</span></div>
+        <div class="lang-row">kannada <span class="lang-badge">Fluent</span></div>
+      </div>
+
+      <div class="glass-card">
+        <div class="sec-label">Interests</div>
+        <div class="tag-cloud">
+          <span class="tag">video Editing</span><span class="tag">motion Light</span>
+          <span class="tag">Writing</span><span class="tag">Poem</span>
+          <span class="tag">Playing</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-col">
+
+      <div class="glass-card">
+        <div class="sec-label">Intership</div>
+
+
+        <div class="entry">
+          <div class="entry-top">
+            <span class="entry-role">python Full Stack Dev And software testing(manual testing,QA Automation)</span>
+            <span class="entry-date">2026 — Present</span>
+          </div>
+       <div class="entry-co">Lumen Labs · San Francisco, CA</div>
+<ul class="entry-list">
+  <li>Developed and maintained scalable web applications using Python, Django, and REST APIs.</li>
+  <li>Designed and implemented responsive front-end interfaces using HTML, CSS, JavaScript, and React.</li>
+  <li>Performed manual testing on web applications including functional, UI, and regression testing.</li>
+  <li>Identified, reported, and tracked bugs using testing tools, improving overall system reliability.</li>
+  <li>Collaborated with cross-functional teams to deliver high-quality software releases on time.</li>
+  <li>Created test cases, test plans, and documentation to ensure complete application coverage.</li>
+</ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+          <span class="entry-role">Python Full Stack Developer & QA Tester</span>
+<span class="entry-date">2022 — 2025</span>
+</div>
+<div class="entry-co">Veritas Health · Remote (Python Full Stack & QA)</div>
+<ul class="entry-list">
+  <li>Developed and optimized web applications using Python, Django, and RESTful APIs for healthcare systems.</li>
+  <li>Implemented secure authentication and database management using MySQL/PostgreSQL.</li>
+  <li>Performed end-to-end manual testing including functional, integration, and regression testing.</li>
+  <li>Reduced system errors by identifying and reporting critical bugs, improving application performance.</li>
+  <li>Created detailed test cases and executed test plans to ensure high-quality product delivery.</li>
+  <li>Collaborated with developers and stakeholders in agile environments for timely feature releases.</li>
+</ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+          <span class="entry-role">Software Tester (Manual QA)</span>
+<span class="entry-date">2022 — 2026</span>
+</div>
+<div class="entry-co">Pixel &amp; Co. Studio · New York, NY</div>
+<ul class="entry-list">
+  <li>Executed manual testing for 15+ projects including e-commerce and online banking applications.</li>
+  <li>Designed and executed 200+ test cases covering functional, UI, usability, and regression testing.</li>
+  <li>Tested e-commerce modules such as product search, cart, checkout, and payment gateway, ensuring smooth transactions.</li>
+  <li>Performed online banking testing including login authentication, fund transfers, transaction history, and security validations.</li>
+  <li>Identified and tracked 100+ bugs using JIRA, reducing production issues by 30%.</li>
+  <li>Used Postman for API testing and basic Selenium scripts for automation support.</li>
+  <li>Collaborated with cross-functional teams to deliver high-quality releases within deadlines.</li>
+</ul>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="sec-label">Education</div>
+
+        <div class="edu-entry">
+          <div>
+            <div class="edu-degree">BCA in Computr science</div>
+            <div class="edu-school">Sangola College Sangola</div>
+            <div class="edu-note">CGPA - 7.87</div>
+          </div>
+          <div class="edu-year">2022 - 2025</div>
+        </div>
+
+        <div class="edu-entry">
+         <div>
+  <div class="edu-degree">Higher Secondary Certificate (HSC)</div>
+  <div class="edu-schooll">M.V. High school And Jr. College umadi,(YOP-2020)</div>
+  <div class="edu-note">Percentage - 62%</div>
+  <div class="edu-degree">Secondary school Certificate (SSC)</div>
+  <div class="edu-schoole">M.V. High school And Jr. College umadi,(YOP - 2018)</div>
+  <div class="edu-note">Percentage - 55%</div>
+</div>
+          <div class="edu-year">2018 - 2020</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <span class="footer-note">Last updated April 2026 · References available on request</span>
+  <button class="btn-print" onclick="window.print()">⬡ Print / Save PDF</button>
+</div>
+
+<script>
+  // Scroll-reveal for all glass cards, entries, edu-entries
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((el, i) => {
+      if (el.isIntersecting) {
+        setTimeout(() => el.target.classList.add('show'), i * 90);
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.06 });
+
+  document.querySelectorAll('.glass-card, .entry, .edu-entry').forEach(el => observer.observe(el));
+
+  // Animate skill bars after a short delay
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.w + '%';
+    });
+  }, 800);
+</script>
+
+</body>
+</html>
